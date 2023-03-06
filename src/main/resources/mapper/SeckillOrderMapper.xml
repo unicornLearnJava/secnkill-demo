@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpowernode.secnkill.mapper.SeckillOrderMapper">
+
+
+    <!--根据id进行查询-->
+    <select id="selectGoodsCount" resultType="com.bjpowernode.secnkill.vo.GoodsVo">
+       SELECT
+       g.id,
+       g.goods_name,
+       g.goods_title,
+       g.goods_img,
+       g.goods_detail,
+       g.goods_price,
+       g.goods_stock,
+       sg.seckill_price,
+       sg.stock_count,
+       sg.start_date,
+       sg.end_date
+      FROM
+        t_goods g
+      LEFT JOIN t_seckill_goods AS sg ON g.id =sg.goods_id
+      WHERE g.id=#{id}
+    </select>
+    <select id="ifRepeat" resultType="com.bjpowernode.secnkill.vo.GoodsVo" >
+        SELECT  * FROM t_seckill_order WHERE user_id=#{userId} AND goods_id=#{goodsId}
+    </select>
+
+    <update id="updataGoodsCount">
+        UPDATE t_seckill_goods SET stock_count=#{stockCount} WHERE goods_id=#{goodsId}
+    </update>
+
+    <insert id="insertSeckillOrder" parameterType="com.bjpowernode.secnkill.pojo.SeckillOrder">
+    INSERT INTO t_seckill_order(user_id,
+	order_id,
+	goods_id)
+       VALUES(#{userId},#{orderId},#{goodsId})
+    </insert>
+
+
+</mapper>
